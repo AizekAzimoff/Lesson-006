@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,9 +23,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String BASE_URL = "https://cat-fact.herokuapp.com";
-    private static final String GET_FACTS = BASE_URL + "/facts/random";
-    private static final String GET_FACTS_WITH_PARAMS = GET_FACTS + "?animal_type=cat&amount=20";
+    private static final String BASE_URL = "https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=50";
 
     private FactsAdapter adapter;
 
@@ -38,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rvFacts.setAdapter(adapter);
         rvFacts.setLayoutManager(layoutManager);
+        rvFacts.addItemDecoration(new DividerItemDecoration(rvFacts.getContext(), layoutManager.getOrientation()));
 
         getFacts();
     }
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
 
             try {
-                HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(GET_FACTS_WITH_PARAMS).openConnection();
+                HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(BASE_URL).openConnection();
                 try {
                     InputStream inputStream = httpURLConnection.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -72,7 +72,11 @@ public class MainActivity extends AppCompatActivity {
 
                     JSONArray jsonArray = new JSONArray(response.toString());
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        facts.add(new Fact(jsonArray.getJSONObject(i).getString("text")));
+                        String text = jsonArray.getJSONObject(i).getString("text");
+                        boolean isDeleted = jsonArray.getJSONObject(i).getBoolean("deleted");
+
+                        if (!isDeleted)
+                            facts.add(new Fact(text, isDeleted));
                     }
 
                     bufferedReader.close();

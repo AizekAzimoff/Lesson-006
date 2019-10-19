@@ -1,14 +1,21 @@
 package ayupov.ilgam.lesson006;
 
-public class Fact {
+class Fact {
 
     private final String text;
 
-    public Fact(String text) {
+    private final boolean isDeleted;
+
+    Fact(String text, boolean isDeleted) {
         this.text = text;
+        this.isDeleted = isDeleted;
     }
 
-    public String getText() {
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    String getText() {
         return text;
     }
 }

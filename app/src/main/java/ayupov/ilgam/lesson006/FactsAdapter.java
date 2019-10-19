@@ -13,7 +13,7 @@ public class FactsAdapter extends RecyclerView.Adapter<FactsVH> {
 
     private List<Fact> facts;
 
-    public FactsAdapter() {
+    FactsAdapter() {
         this.facts = new ArrayList<>();
     }
 
@@ -36,7 +36,7 @@ public class FactsAdapter extends RecyclerView.Adapter<FactsVH> {
         return facts.size();
     }
 
-    public void setFacts(List<Fact> facts) {
+    void setFacts(List<Fact> facts) {
         this.facts.addAll(facts);
         notifyDataSetChanged();
     }
